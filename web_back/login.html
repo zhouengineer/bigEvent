@@ -9,6 +9,7 @@
     <link rel="stylesheet" type="text/css" href="css/reset.css">
     <link rel="stylesheet" type="text/css" href="css/iconfont.css">
     <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="stylesheet" href="./js/bootstrap/css/bootstrap.min.css">
 </head>
 
 <body>
@@ -28,9 +29,93 @@
                 <input type="submit" class="input_sub" value="登 录">
             </form>
         </div>
-
     </div> 
+<!-- ---------------模态框------------------------ -->
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">温馨提示!</h4>
+            </div>
+            <div class="modal-body">
+               
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
 
+
+    <script src="./js/jquery-1.12.4.min.js"></script>
+    <script src="./js/bootstrap/js/bootstrap.min.js"></script>
+    <script>
+    /* 
+    需求分析
+       1.给登录按钮注册点击事件   阻止默认跳转
+       2.获取文本框内容 发送ajax请求  
+       3. 判断是否为空 如果是空  跳出'文本框内不能为空'
+       4. 判断密码或用户名输入错误  ,如果错误  弹出"密码或用户名输入错误,请重新输入"
+       5.弹出框进行美化  -----使用bootstrap框架内样式 ----模态框
+     */
+    /* 
+        请求地址：http://localhost:8000/admin/login 
+        请求方式：post
+        请求参数：
+        名称	     类型	     说明
+        user_name	string	用户名（admin）
+        password	string	密码(123456)
+    */
+     $(function () {
+         
+        //1.给登录按钮注册点击事件   阻止默认跳转
+        $('.input_sub').on('click',function (e) {
+            e.preventDefault();
+            //2.获取文本框内容 
+            var input_txt = $('.input_txt').val().trim();
+            var input_pass = $('.input_pass').val().trim();
+            //3.判断是否为空 如果是空  跳出'文本框内不能为空'
+            if (input_txt =="" || input_pass =='') {
+                $('.modal-body').text('文本框内不能为空');
+               // alert('文本框内不能为空')
+               $('#myModal').modal({
+                        keyboard: true
+                    })
+
+                return ;
+            };
+            //4.发送ajax请求
+            $.ajax({
+                type:'post',
+                url: 'http://localhost:8000/admin/login',
+                data : {
+                    user_name : input_txt,
+                    password : input_pass
+                },
+                success: function (backData) {
+                    console.log(backData);
+                    if (backData.code === 200) {
+                        window.location.href = './index.html'
+                    }else{
+                       // alert('密码或用户名输入错误,请重新输入')
+                       $('.modal-body').text('密码或用户名输入错误,请重新输入')
+                       $('#myModal').modal({
+                        keyboard: true
+                    })
+
+                    }
+                }
+            })
+        })
+
+     });
+    
+    </script>
 </body>
 
 </html>
