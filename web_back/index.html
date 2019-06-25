@@ -135,8 +135,33 @@
                 })
             })
         });
-    </script>
+   
 
+
+    /* 
+    获取用户信息
+    请求地址：http://localhost:8000/admin/getuser 
+    请求方式：get
+    请求参数：
+    返回数据：
+    名称	     类型	     说明
+    nickname	string	用户昵称
+    user_pic	string	用户图片地址
+    思路分析 :
+        
+        1.发送ajax请求  获取数据nickname  uer_pic  
+        2.将登录的信息,在打打开页面时, 自动填充到  用户栏中
+    */
+
+    $.ajax({
+        url: 'http://localhost:8000/admin/getuser',
+        success : function (backData) {
+            console.log(backData);
+            $('.user_info>img').attr('src',backData.data.user_pic);
+            $('.user_info>span').html('欢迎&nbsp;&nbsp;' +backData.data.nickname);
+        }
+    })
+    </script>
 </body>
 
 </html>
